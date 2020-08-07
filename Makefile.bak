@@ -1,0 +1,34 @@
+
+export PUZZLE_CC := g++
+export PUZZLE_AR := ar
+PUZZLE_LINKER= $(PUZZLE_CC)
+
+CFLAGS = -DWIN32 -DBUILD_PIC_PUZZLE_DLL -Wall
+#LDFLAGS = -Wl,--add-stdcall-alias -lstdc++
+
+
+OBJS=pic_puzzle5.o
+
+PUZZLEC_STATIC_LIB=libC_puzzleC.lib
+
+
+LIB=libC_puzzleC.lib
+SHLIB=libC_puzzleC.dll
+                                                                                                                                                                         
+all : $(LIB)
+
+
+$(LIB): $(OBJS) Makefile
+	$(PUZZLE_AR) cruv $(LIB) $(OBJS)
+	$(PUZZLE_LINKER) $(OBJS) -fPIC -shared -o $(SHLIB)
+#	$(PUZZLE_LINKER) $(LDFLAGS) -shared -o $(SHLIB) $(OBJS)
+# x86_64-pc-cygwin-g++.exe pic_puzzle5.cpp -fPIC -shared -o libC_puzzleC32.dll
+
+# Build pic_puzzle.c
+PUZZLEMATICS_HDRS=$(wildcard *.h)
+
+%.o: %.c $(PUZZLEMATICS_HDRS) Makefile
+	$(PUZZLE_CC) -c -o $@ $(CFLAGS) $<
+
+clean:
+	-rm -f $(OBJS) $(LIB) $(SHLIB)
